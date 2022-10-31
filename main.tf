@@ -1,5 +1,5 @@
 resource "aws_codecommit_repository" "this" {
-  repository_name = var.repository_name
+  repository_name = join("-", [var.repository_name, "repo"])
   description     = var.description
   default_branch  = var.default_branch
 
