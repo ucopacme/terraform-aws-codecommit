@@ -84,7 +84,7 @@ resource "aws_iam_role_policy_attachment" "cross_account" {
 }
 
 resource "aws_codecommit_repository" "this" {
-  repository_name = join("-", [var.repository_name])
+  repository_name = var.repository_name
   description     = var.description
   default_branch  = var.default_branch
 
