@@ -1,5 +1,5 @@
 resource "aws_iam_role" "cross_account" {
-  count              = var.repo_allowed_aws_account_ids != [] ? 1 : 0
+  count              = var.repo_cross_account_role_name != "" ? 1 : 0
   name               = var.repo_cross_account_role_name
   description        = "Role for cross account access to ${var.repository_name} CodeCommit repo"
   assume_role_policy = data.aws_iam_policy_document.allowed_account_trust.json
@@ -70,7 +70,7 @@ data "aws_iam_policy_document" "cross_account" {
 }
 
 resource "aws_iam_policy" "cross_account" {
-  count       = var.repo_allowed_aws_account_ids != [] ? 1 : 0
+  count       = var.repo_cross_account_role_name != "" ? 1 : 0
   name        = join("-", [var.repo_cross_account_role_name, "policy"])
   description = "Permissions for ${var.repo_cross_account_role_name}"
   policy      = data.aws_iam_policy_document.cross_account.json
@@ -78,7 +78,7 @@ resource "aws_iam_policy" "cross_account" {
 }
 
 resource "aws_iam_role_policy_attachment" "cross_account" {
-  count      = var.repo_allowed_aws_account_ids != [] ? 1 : 0
+  count      = var.repo_cross_account_role_name != "" ? 1 : 0
   role       = aws_iam_role.cross_account[0].name
   policy_arn = aws_iam_policy.cross_account[0].arn
 }
