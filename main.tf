@@ -2,11 +2,12 @@ resource "aws_iam_role" "cross_account" {
   count              = var.repo_cross_account_role_name != "" ? 1 : 0
   name               = var.repo_cross_account_role_name
   description        = "Role for cross account access to ${var.repository_name} CodeCommit repo"
-  assume_role_policy = data.aws_iam_policy_document.allowed_account_trust.json
+  assume_role_policy = data.aws_iam_policy_document.allowed_account_trust[0].json
   tags               = var.tags
 }
 
 data "aws_iam_policy_document" "allowed_account_trust" {
+  count = length(var.repo_allowed_aws_account_ids) != 0 ? 1 : 0
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -19,6 +20,7 @@ data "aws_iam_policy_document" "allowed_account_trust" {
 }
 
 data "aws_iam_policy_document" "cross_account" {
+  count = var.repo_cross_account_role_name != "" ? 1 : 0
   statement {
     sid       = "AllowCodeCommitActions"
     effect    = "Allow"
@@ -73,7 +75,7 @@ resource "aws_iam_policy" "cross_account" {
   count       = var.repo_cross_account_role_name != "" ? 1 : 0
   name        = join("-", [var.repo_cross_account_role_name, "policy"])
   description = "Permissions for ${var.repo_cross_account_role_name}"
-  policy      = data.aws_iam_policy_document.cross_account.json
+  policy      = data.aws_iam_policy_document.cross_account[0].json
   tags        = var.tags
 }
 
