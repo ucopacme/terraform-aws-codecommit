@@ -22,3 +22,7 @@ output "name" {
   description = "The name for the repository"
   value       = var.repository_name
 }
+
+output "cross_account_role_arn" {
+  value = var.repo_cross_account_role_name != "" ? aws_iam_role.cross_account.arn : null
+}
